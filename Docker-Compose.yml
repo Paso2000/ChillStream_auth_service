@@ -1,0 +1,22 @@
+version: '3'
+services:
+  backend:
+    build: .
+    container_name: chillStream_auth_service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+
+  mongo:
+    image: mongo:latest
+    container_name: chillStream_auth_service_db
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
