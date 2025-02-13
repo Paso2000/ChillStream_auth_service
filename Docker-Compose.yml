@@ -4,7 +4,7 @@ services:
     build: .
     container_name: chillStream_auth_service
     ports:
-      - "8080:8080"
+      - "8081:8081"
     depends_on:
       - mongo
     volumes:

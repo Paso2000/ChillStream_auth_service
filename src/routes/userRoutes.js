@@ -1,28 +1,90 @@
 import express from "express";
 import User from "../models/user.js";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
-// Ottenere tutti gli utenti
 router.get("/", async (req, res) => {
     try {
         const users = await User.find();
         res.json(users);
-
     } catch (error) {
         res.status(500).json({ message: "Errore nel recupero utenti" });
     }
 });
 
-// Creare un nuovo utente
+router.get("/:id", async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ message: "Utente non trovato" });
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: "Errore nel recupero utente" });
+    }
+});
+
 router.post("/", async (req, res) => {
     try {
-        const { name, email, password } = req.body;
-        const newUser = new User({ name, email, password });
+        const { name,
+            surname,
+            isAdmin,
+            password,
+            email,
+            date_of_birth,
+            paymentMethod,
+            profiles } = req.body;
+        const newUser = new User({
+            name,
+            surname,
+            isAdmin,
+            password,
+            email,
+            date_of_birth,
+            paymentMethod,
+            profiles });
         await newUser.save();
         res.status(201).json(newUser);
     } catch (error) {
         res.status(400).json({ message: "Errore nella creazione utente" });
+    }
+});
+
+router.put("/:id", async (req, res) => {
+    try {
+        const { name,surname,
+            isAdmin,
+            password,
+            email,
+            date_of_birth,
+            paymentMethod,
+            profiles} = req.body;
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.id,
+            {
+                name,
+                surname,
+                isAdmin,
+                password,
+                email,
+                date_of_birth,
+                paymentMethod,
+                profiles}
+
+        );
+        if (!updatedUser) return res.status(404).json({ message: "Utente non trovato" });
+        res.json(updatedUser);
+    } catch (error) {
+        res.status(400).json({ message: "Errore nell'aggiornamento utente" });
+    }
+});
+
+router.delete("/:id", async (req, res) => {
+    try {
+        const deletedUser = await User.findByIdAndDelete(req.params.id);
+        if (!deletedUser) return res.status(404).json({ message: "Utente non trovato" });
+        res.json({ message: "Utente eliminato con successo" });
+    } catch (error) {
+        res.status(500).json({ message: "Errore nella cancellazione utente" });
     }
 });
 

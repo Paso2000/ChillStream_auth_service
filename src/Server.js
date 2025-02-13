@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRoutes from "./routes/userRoutes.js";
+import profileRoutes from "./routes/profileRoutes.js";
 import connectDB from "./db.js";
 
 dotenv.config();
@@ -16,8 +17,9 @@ app.use(cors());
 connectDB();
 
 // Routes
-app.use("/", userRoutes);
+app.use("/users", userRoutes);
+app.use("/profiles",profileRoutes);
 
 // Avvio del server
-const PORT =  8080;
+const PORT =  8081;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
