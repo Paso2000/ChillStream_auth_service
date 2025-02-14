@@ -45,20 +45,19 @@ routes and validations.
 
 #### Create a User
 ```{
+    {
     "name": "Luca",
-    "surname": "PAso",
+    "surname": "PAAso",
     "isAdmin":true,
     "password": "marcomangno",
     "email": "paso@passini",
     "date_of_birth": "07-07-2000",
-    "paymentMethod": "paypal",
-    "profiles": "1"
+    "paymentMethod": "carta"
 }
 ```
 #### Add a Profile
 ```
 {
-"userId": 1
 "profileImage": "/sfondo2.png",  
 "nickname": "Giamma"
 }

@@ -1,6 +1,7 @@
 import express from "express";
 import User from "../models/user.js";
 import mongoose from "mongoose";
+import Profile from "../models/profile.js";
 
 const router = express.Router();
 
@@ -31,8 +32,7 @@ router.post("/", async (req, res) => {
             password,
             email,
             date_of_birth,
-            paymentMethod,
-            profiles } = req.body;
+            paymentMethod} = req.body;
         const newUser = new User({
             name,
             surname,
@@ -41,8 +41,10 @@ router.post("/", async (req, res) => {
             email,
             date_of_birth,
             paymentMethod,
-            profiles });
+            profiles: []
+             });
         await newUser.save();
+        //aggiunge il primo profilo
         res.status(201).json(newUser);
     } catch (error) {
         res.status(400).json({ message: "Errore nella creazione utente" });
@@ -82,6 +84,7 @@ router.delete("/:id", async (req, res) => {
     try {
         const deletedUser = await User.findByIdAndDelete(req.params.id);
         if (!deletedUser) return res.status(404).json({ message: "Utente non trovato" });
+        await Profile.deleteMany({ userId: req.params.id });
         res.json({ message: "Utente eliminato con successo" });
     } catch (error) {
         res.status(500).json({ message: "Errore nella cancellazione utente" });

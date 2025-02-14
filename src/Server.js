@@ -18,7 +18,7 @@ connectDB();
 
 // Routes
 app.use("/users", userRoutes);
-app.use("/profiles",profileRoutes);
+app.use("/users/:id/profiles",profileRoutes);
 
 // Avvio del server
 const PORT =  8081;
