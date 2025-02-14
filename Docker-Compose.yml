@@ -9,6 +9,8 @@ services:
       - mongo
     volumes:
       - .:/app
+    networks:
+      - shared_network
 
   mongo:
     image: mongo:latest
@@ -17,6 +19,13 @@ services:
       - "27018:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - shared_network
+
+networks:
+  shared_network:
+    external: true
 
 volumes:
   mongo_data:
+
