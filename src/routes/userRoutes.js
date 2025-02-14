@@ -1,38 +1,55 @@
 import express from "express";
 import User from "../models/user.js";
-import mongoose from "mongoose";
 import Profile from "../models/profile.js";
 
 const router = express.Router();
 
+/**
+ * @route   GET /users
+ * @desc    Retrieve all users
+ * @access  Public
+ */
 router.get("/", async (req, res) => {
     try {
         const users = await User.find();
         res.json(users);
     } catch (error) {
-        res.status(500).json({ message: "Errore nel recupero utenti" });
+        res.status(500).json({ message: "Error retrieving users" });
     }
 });
 
-router.get("/:id", async (req, res) => {
+/**
+ * @route   GET /users/:userId
+ * @desc    Retrieve a single user by ID
+ * @access  Public
+ */
+router.get("/:userId", async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
-        if (!user) return res.status(404).json({ message: "Utente non trovato" });
+        const user = await User.findById(req.params.userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
         res.json(user);
     } catch (error) {
-        res.status(500).json({ message: "Errore nel recupero utente" });
+        res.status(500).json({ message: "Error retrieving user" });
     }
 });
 
+/**
+ * @route   POST /users
+ * @desc    Create a new user
+ * @access  Public
+ */
 router.post("/", async (req, res) => {
     try {
-        const { name,
+        const {
+            name,
             surname,
             isAdmin,
             password,
             email,
             date_of_birth,
-            paymentMethod} = req.body;
+            paymentMethod
+        } = req.body;
+
         const newUser = new User({
             name,
             surname,
@@ -41,54 +58,66 @@ router.post("/", async (req, res) => {
             email,
             date_of_birth,
             paymentMethod,
-            profiles: []
-             });
+            profiles: [] // Ensure profiles is an empty array initially
+        });
+
         await newUser.save();
-        //aggiunge il primo profilo
         res.status(201).json(newUser);
     } catch (error) {
-        res.status(400).json({ message: "Errore nella creazione utente" });
+        res.status(400).json({ message: "Error creating user" });
     }
 });
 
-router.put("/:id", async (req, res) => {
+/**
+ * @route   PUT /users/:userId
+ * @desc    Update an existing user by ID
+ * @access  Public
+ */
+router.put("/:userId", async (req, res) => {
     try {
-        const { name,surname,
+        const {
+            name,
+            surname,
             isAdmin,
             password,
             email,
             date_of_birth,
             paymentMethod,
-            profiles} = req.body;
-        const updatedUser = await User.findByIdAndUpdate(
-            req.params.id,
-            {
-                name,
-                surname,
-                isAdmin,
-                password,
-                email,
-                date_of_birth,
-                paymentMethod,
-                profiles}
+            profiles
+        } = req.body;
 
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.userId,
+            { name, surname, isAdmin, password, email, date_of_birth, paymentMethod, profiles },
+            { new: true } // Return the updated document
         );
-        if (!updatedUser) return res.status(404).json({ message: "Utente non trovato" });
+
+        if (!updatedUser) return res.status(404).json({ message: "User not found" });
+
         res.json(updatedUser);
     } catch (error) {
-        res.status(400).json({ message: "Errore nell'aggiornamento utente" });
+        res.status(400).json({ message: "Error updating user" });
     }
 });
 
-router.delete("/:id", async (req, res) => {
+/**
+ * @route   DELETE /users/:userId
+ * @desc    Delete a user and their associated profiles
+ * @access  Public
+ */
+router.delete("/:userId", async (req, res) => {
     try {
-        const deletedUser = await User.findByIdAndDelete(req.params.id);
-        if (!deletedUser) return res.status(404).json({ message: "Utente non trovato" });
-        await Profile.deleteMany({ userId: req.params.id });
-        res.json({ message: "Utente eliminato con successo" });
+        const deletedUser = await User.findByIdAndDelete(req.params.userId);
+        if (!deletedUser) return res.status(404).json({ message: "User not found" });
+
+        // Delete all profiles associated with this user
+        await Profile.deleteMany({ userId: req.params.userId });
+
+        res.json({ message: "User successfully deleted" });
     } catch (error) {
-        res.status(500).json({ message: "Errore nella cancellazione utente" });
+        res.status(500).json({ message: "Error deleting user" });
     }
 });
 
 export default router;
+
