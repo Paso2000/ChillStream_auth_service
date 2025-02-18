@@ -1,134 +1,40 @@
+/**
+ * @fileoverview This module defines the routes for user-related operations.
+ * It provides endpoints for listing, creating, retrieving, updating, and deleting users.
+ * The routes are handled by the `userController` methods.
+ *
+ * @module routes/userRoutes
+ */
+
 const express = require("express");
 const router = express.Router();
+const controller = require("../controller/userController.js");
 
 /**
- * @route   GET /users
- * @desc    Retrieve all users
- * @access  Public
+ * Route serving user operations.
+ *
+ * @name /users
+ * @route {GET} / - Retrieves a list of all users.
+ * @route {POST} / - Creates a new user.
  */
-// router.get("/", async (req, res) => {
-//     try {
-//         const users = await User.find();
-//         res.json(users);
-//     } catch (error) {
-//         res.status(500).json({ message: "Error retrieving users" });
-//     }
-// });
-//
-// /**
-//  * @route   GET /users/:userId
-//  * @desc    Retrieve a single user by ID
-//  * @access  Public
-//  */
-// router.get("/:userId", async (req, res) => {
-//     try {
-//         const user = await User.findById(req.params.userId);
-//         if (!user) return res.status(404).json({ message: "User not found" });
-//         res.json(user);
-//     } catch (error) {
-//         res.status(500).json({ message: "Error retrieving user" });
-//     }
-// });
-//
-// /**
-//  * @route   POST /users
-//  * @desc    Create a new user
-//  * @access  Public
-//  */
-// router.post("/", async (req, res) => {
-//     try {
-//         const {
-//             name,
-//             surname,
-//             isAdmin,
-//             password,
-//             email,
-//             date_of_birth,
-//             paymentMethod
-//         } = req.body;
-//
-//         const newUser = new User({
-//             name,
-//             surname,
-//             isAdmin,
-//             password,
-//             email,
-//             date_of_birth,
-//             paymentMethod,
-//             profiles: [] // Ensure profiles is an empty array initially
-//         });
-//
-//         await newUser.save();
-//         res.status(201).json(newUser);
-//     } catch (error) {
-//         res.status(400).json({ message: "Error creating user" });
-//     }
-// });
-//
-// /**
-//  * @route   PUT /users/:userId
-//  * @desc    Update an existing user by ID
-//  * @access  Public
-//  */
-// router.put("/:userId", async (req, res) => {
-//     try {
-//         const {
-//             name,
-//             surname,
-//             isAdmin,
-//             password,
-//             email,
-//             date_of_birth,
-//             paymentMethod,
-//             profiles
-//         } = req.body;
-//
-//         const updatedUser = await User.findByIdAndUpdate(
-//             req.params.userId,
-//             { name, surname, isAdmin, password, email, date_of_birth, paymentMethod, profiles },
-//             { new: true } // Return the updated document
-//         );
-//
-//         if (!updatedUser) return res.status(404).json({ message: "User not found" });
-//
-//         res.json(updatedUser);
-//     } catch (error) {
-//         res.status(400).json({ message: "Error updating user" });
-//     }
-// });
-//
-// /**
-//  * @route   DELETE /users/:userId
-//  * @desc    Delete a user and their associated profiles
-//  * @access  Public
-//  */
-// router.delete("/:userId", async (req, res) => {
-//     try {
-//         const deletedUser = await User.findByIdAndDelete(req.params.userId);
-//         if (!deletedUser) return res.status(404).json({ message: "User not found" });
-//
-//         // Delete all profiles associated with this user
-//         await Profile.deleteMany({ userId: req.params.userId });
-//
-//         res.json({ message: "User successfully deleted" });
-//     } catch (error) {
-//         res.status(500).json({ message: "Error deleting user" });
-//     }
-// });
-//
-// export default router;
+router.route("/")
+    .get(controller.listUsers)  // Fetch all users
+    .post(controller.createUser); // Create a new user
 
-const controller = require('../controller/userController.js');
-
-router.route('/')
-    .get(controller.listUsers)
-    .post(controller.createUser);
-
-router.route('/:userId')
-    .get(controller.getUser)
-    .put(controller.updateUser)
-    .delete(controller.deleteUser);
-
-
+/**
+ * Route serving specific user operations.
+ *
+ * @name /users/:userId
+ * @route {GET} /:userId - Retrieves a user by ID.
+ * @route {PUT} /:userId - Updates a user by ID.
+ * @route {DELETE} /:userId - Deletes a user by ID.
+ *
+ * @param {string} userId - The unique identifier of the user.
+ */
+router.route("/:userId")
+    .get(controller.getUser)    // Fetch a single user by ID
+    .put(controller.updateUser) // Update user details by ID
+    .delete(controller.deleteUser); // Remove a user by ID
 
 module.exports = router;
+
