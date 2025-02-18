@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require ("mongoose");
 
 /**
  * Profile Schema
@@ -33,5 +33,5 @@ const ProfileSchema = new mongoose.Schema({
 });
 
 // Create and export the Profile model using the ProfileSchema.
-export default mongoose.models.Profile || mongoose.model("Profile", ProfileSchema);
+module.exports = mongoose.models.Profile || mongoose.model("Profile", ProfileSchema);
 

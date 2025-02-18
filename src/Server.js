@@ -1,7 +1,7 @@
-import express from "express";
-import userRoutes from "./routes/userRoutes.js";
-import profileRoutes from "./routes/profileRoutes.js";
-import connectDB from "./db.js";
+const express = require ("express");
+const userRoutes = require ("./routes/userRoutes.js");
+const profileRoutes = require ("./routes/profileRoutes.js");
+const connectDB = require ("./db.js");
 
 const app = express();
 

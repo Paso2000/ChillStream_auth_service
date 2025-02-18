@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require ("mongoose");
 
 /**
  * User Schema
@@ -18,5 +18,5 @@ const UserSchema = new mongoose.Schema({
 }, { timestamps: true }); // Adds createdAt and updatedAt fields automatically
 
 // Prevent model overwrite error in hot-reloading environments
-export default mongoose.models.User || mongoose.model("User", UserSchema);
+module.exports = mongoose.models.User || mongoose.model("User", UserSchema);
 
