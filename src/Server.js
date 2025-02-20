@@ -2,8 +2,12 @@ const express = require ("express");
 const userRoutes = require ("./routes/userRoutes.js");
 const profileRoutes = require ("./routes/profileRoutes.js");
 const connectDB = require ("./db.js");
+const cors = require("cors");
 
 const app = express();
+
+// Abilita CORS per consentire richieste dal frontend
+app.use(cors());
 
 // Middleware
 app.use(express.json());
