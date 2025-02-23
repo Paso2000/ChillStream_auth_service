@@ -1,6 +1,7 @@
 const express = require ("express");
 const userRoutes = require ("./routes/userRoutes.js");
 const profileRoutes = require ("./routes/profileRoutes.js");
+const adminRoutes = require("./routes/adminRoutes")
 const connectDB = require ("./db.js");
 const cors = require("cors");
 
@@ -17,8 +18,9 @@ app.use(express.json());
 connectDB();
 
 // Routes
-app.use("/users", userRoutes);
-app.use("/users/:id/profiles",profileRoutes);
+app.use("/users", userRoutes);  //user routes
+app.use("/users/:id/profiles",profileRoutes); //profile routes
+app.use("/admin", adminRoutes); //admin routes
 
 // Starting the server on port 8081
 const PORT =  8081;

@@ -62,6 +62,14 @@ routes and validations.
 "nickname": "Giamma"
 }
 ```
+### Add an Admin
 
+```
+{
+"username": "GiammaIlControllore",
+"email": "giamma@giammini",
+"password" "pastaConTonno"
+}
+```
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
