@@ -120,7 +120,6 @@ exports.deleteUser = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Delete all profiles associated with this user
         await Profile.deleteMany({ userId: req.params.userId });
 
         console.log(`User ${req.params.userId} and associated profiles deleted successfully`);
