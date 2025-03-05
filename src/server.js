@@ -1,27 +1,33 @@
-const express = require ("express");
-const userRoutes = require ("./routes/userRoutes.js");
-const profileRoutes = require ("./routes/profileRoutes.js");
-const adminRoutes = require("./routes/adminRoutes")
-const connectDB = require ("./db.js");
+const express = require("express");
+const http = require("http");
 const cors = require("cors");
 
-const app = express();
+const userRoutes = require("./routes/userRoutes.js");
+const profileRoutes = require("./routes/profileRoutes.js");
+const adminRoutes = require("./routes/adminRoutes.js");
+const connectDB = require("./db.js");
+const { initializeSocket } = require("./socket.js"); // Import Socket.IO logic
 
-// Abilita CORS per consentire richieste dal frontend
+const app = express();
+const server = http.createServer(app); // Create HTTP server
+
+// Enable CORS
 app.use(cors());
 
 // Middleware
 app.use(express.json());
 
-
 // Connecting DB
 connectDB();
 
 // Routes
-app.use("/users", userRoutes);  //user routes
-app.use("/users/:id/profiles",profileRoutes); //profile routes
-app.use("/admins", adminRoutes); //admin routes
+app.use("/users", userRoutes);
+app.use("/users/:id/profiles", profileRoutes);
+app.use("/admins", adminRoutes);
 
-// Starting the server on port 8081
-const PORT =  8081;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Initialize Socket.IO
+initializeSocket(server);
+
+// Start the server on port 8081
+const PORT = 8081;
+server.listen(PORT, () => console.log(` Server running on port ${PORT}`));
