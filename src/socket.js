@@ -13,8 +13,19 @@ const initializeSocket = (server) => {
     io.on("connection", (socket) => {
         console.log(` User connected: ${socket.id}`);
 
+        socket.on("joinRoom", (filmId) => {
+            socket.join(filmId);
+            console.log(`User ${socket.id} joined room: ${filmId}`);
+        });
+
+        // Leave room when user exits
+        socket.on("leaveRoom", (filmId) => {
+            socket.leave(filmId);
+            console.log(`User ${socket.id} left room: ${filmId}`);
+        });
+
         socket.on("sendMessage", (message) => {
-            io.emit("receiveMessage", message); // Broadcast to all clients
+            io.to(message.filmId).emit("receiveMessage", message);
         });
 
         socket.on("disconnect", () => {
