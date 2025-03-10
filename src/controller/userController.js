@@ -4,11 +4,11 @@
  *
  * @module controllers/userController
  */
-
 const User = require("../models/user.js");
 const Profile = require("../models/profile.js");
-
+const bcrypt = require("bcryptjs");
 /**
+ *
  * Retrieves all users.
  *
  * @async
@@ -50,7 +50,7 @@ exports.getUser = async (req, res) => {
         console.error(" Error retrieving user:", error);
         res.status(500).json({ message: "Error retrieving user" });
     }
-};
+}
 
 /**
  * Creates a new user.
@@ -63,13 +63,26 @@ exports.getUser = async (req, res) => {
  */
 exports.createUser = async (req, res) => {
     try {
-        const newUser = new User(req.body);
+        const saltRounds = 10
+        const { name, surname, email, password, date_of_birth, paymentMethod } = req.body;
+
+        // Cripta la password
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // Salva l'utente con la password hashata
+        const newUser = new User({
+            name,
+            surname,
+            email,
+            password: hashedPassword, // Salviamo l'hash, non la password in chiaro
+            date_of_birth,
+            paymentMethod
+        });
+
         await newUser.save();
-        console.log(` User ${newUser._id} created successfully`);
-        res.status(201).json(newUser);
+        res.status(201).json({ message: "User registered successfully!" });
     } catch (error) {
-        console.error(" Error creating user:", error);
-        res.status(400).json({ message: "Error creating user" });
+        res.status(500).json({ message: "Error registering user", error });
     }
 };
 
@@ -129,3 +142,4 @@ exports.deleteUser = async (req, res) => {
         res.status(500).json({ message: "Error deleting user" });
     }
 };
+

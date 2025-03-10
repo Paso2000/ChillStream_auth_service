@@ -5,8 +5,10 @@ const cors = require("cors");
 const userRoutes = require("./routes/userRoutes.js");
 const profileRoutes = require("./routes/profileRoutes.js");
 const adminRoutes = require("./routes/adminRoutes.js");
+const loginRoutes = require("./routes/loginRoutes.js")
 const connectDB = require("./db.js");
 const { initializeSocket } = require("./socket.js"); // Import Socket.IO logic
+
 
 const app = express();
 const server = http.createServer(app); // Create HTTP server
@@ -24,6 +26,7 @@ connectDB();
 app.use("/users", userRoutes);
 app.use("/users/:id/profiles", profileRoutes);
 app.use("/admins", adminRoutes);
+app.use("/logins", loginRoutes)
 
 // Initialize Socket.IO
 initializeSocket(server);

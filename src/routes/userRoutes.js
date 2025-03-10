@@ -19,7 +19,7 @@ const controller = require("../controller/userController.js");
  */
 router.route("/")
     .get(controller.listUsers)  // Fetch all users
-    .post(controller.createUser); // Create a new user
+    .post(controller.createUser) // Create a new user
 
 /**
  * Route serving specific user operations.
@@ -31,10 +31,15 @@ router.route("/")
  *
  * @param {string} userId - The unique identifier of the user.
  */
+
+
 router.route("/:userId")
     .get(controller.getUser)    // Fetch a single user by ID
     .put(controller.updateUser) // Update user details by ID
     .delete(controller.deleteUser); // Remove a user by ID
+
+
+
 
 module.exports = router;
 
