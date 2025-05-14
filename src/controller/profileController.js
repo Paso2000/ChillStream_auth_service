@@ -68,7 +68,6 @@ exports.createProfile = async (req, res) => {
         // Add the profile to the user's profile array
         user.profiles.push(newProfile._id);
         await user.save();
-
         res.status(201).json(newProfile);
     } catch (error) {
         res.status(400).json({ message: "Error creating profile" });
